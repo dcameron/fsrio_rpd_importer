@@ -1,0 +1,8 @@
+name: FSRIO RPD Importer
+type: module
+description: 'Provides plugins for Migrate that import research project data from various sources.'
+package: FSRIO
+core: 8.x
+dependencies:
+  - drupal:migrate (>= 8.1)
+  - fsrio_rpd:fsrio_rpd
