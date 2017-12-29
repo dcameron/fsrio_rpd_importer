@@ -1,4 +1,4 @@
-name: FSRIO RPD Importer
+name: Research Projects Database Importer
 type: module
 description: 'Provides plugins for Migrate that import research project data from various sources.'
 package: FSRIO
