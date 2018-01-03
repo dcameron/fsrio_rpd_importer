@@ -34,6 +34,11 @@ class ArsImporter extends ImporterBase {
   const PROJECT_PATH = '/research/project/?accnNo=';
 
   /**
+   * The path of the investigator view page, plus part of the query string.
+   */
+  const PERSON_PATH = '/people-locations/person/?person-id=';
+
+  /**
    * Override the projectUrls during testing for faster file access.
    *
    * @var string[]
@@ -82,6 +87,15 @@ class ArsImporter extends ImporterBase {
       $value = trim($div->nodeValue);
       if ($class == 'usa-width-three-fourths usa-layout-docs-main_content') {
         $project += $this->parseMainContent($div);
+      }
+    }
+
+    // Investigator names are contained within anchor tags.
+    /** @var \DOMNode $anchor */
+    foreach ($this->document->getElementsByTagName('a') as $anchor) {
+      $href = $anchor->attributes->getNamedItem('href')->nodeValue;
+      if ($href !== NULL && substr($href, 0, strlen(self::PERSON_PATH)) == self::PERSON_PATH) {
+        $project['investigators'][] = trim($anchor->nodeValue);
       }
     }
 
