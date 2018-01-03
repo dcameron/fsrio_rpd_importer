@@ -66,6 +66,10 @@ class ArsImporter extends ImporterBase {
   protected function parseProjectPage() {
     $project = [];
 
+    // The easiest way to get the accession_number is to get it from the query
+    // parameter in the URL.
+    $project['accession_number'] = $this->getAccessionNumberFromUrl();
+
     // Most of the project content is contained in the main content div.
     /** @var \DOMNode $div */
     foreach ($this->document->getElementsByTagName('div') as $div) {
@@ -78,6 +82,21 @@ class ArsImporter extends ImporterBase {
 
     var_dump($project);
     return $project;
+  }
+
+  /**
+   * Parses the project's URL to get its accession number.
+   *
+   * @return string
+   *   The accession number.
+   */
+  protected function getAccessionNumberFromUrl() {
+    $parts = parse_url($this->currentUrl);
+    if (!isset($parts['query'])) {
+      return '';
+    }
+    parse_str($parts['query'], $result);
+    return isset($result['accnNo']) ? $result['accnNo'] : '';
   }
 
   /**
