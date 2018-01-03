@@ -27,6 +27,13 @@ abstract class ImporterBase extends SourcePluginBase implements ContainerFactory
   protected $projectUrls = [];
 
   /**
+   * The URL of the project page that is currently loaded in $this->document.
+   *
+   * @var string
+   */
+  protected $currentUrl;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration) {
@@ -96,6 +103,7 @@ abstract class ImporterBase extends SourcePluginBase implements ContainerFactory
 
     foreach ($this->projectUrls as $url) {
       $this->document->loadHTMLFile($url);
+      $this->currentUrl = $url;
       $projects[] = ['source_url' => $url] + $this->parseProjectPage();
     }
 
