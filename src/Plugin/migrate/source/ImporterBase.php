@@ -145,7 +145,7 @@ abstract class ImporterBase extends SourcePluginBase implements ContainerFactory
    * {@inheritdoc}
    */
   public function __toString() {
-    return $this->getSourceUrl();
+    return get_class($this);
   }
 
 }
