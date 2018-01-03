@@ -29,6 +29,11 @@ class ArsImporter extends ImporterBase {
   const SOURCE_URL = 'https://www.ars.usda.gov/research/project-list-by-program/?npCode=108&filter=yes&projectStatus=A&projectType=&filterLocation=&showAllProjects=N&sortBy=L&submitFilter=Filter';
 
   /**
+   * The path of the project view page, plus part of the query string.
+   */
+  const PROJECT_PATH = '/research/project/?accnNo=';
+
+  /**
    * Override the projectUrls during testing for faster file access.
    *
    * @var string[]
@@ -51,7 +56,7 @@ class ArsImporter extends ImporterBase {
     /** @var \DOMNode $anchor */
     foreach ($this->document->getElementsByTagName('a') as $anchor) {
       $href = $anchor->attributes->getNamedItem('href')->nodeValue;
-      if ($href !== NULL && substr($href, 0, 26) == '/research/project/?accnNo=') {
+      if ($href !== NULL && substr($href, 0, strlen(self::PROJECT_PATH)) == self::PROJECT_PATH) {
         $urls[] = self::BASE_URL . $href;
       }
     }
