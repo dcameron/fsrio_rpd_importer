@@ -13,6 +13,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 abstract class ImporterBase extends SourcePluginBase implements ContainerFactoryPluginInterface {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $skipCount = TRUE;
+
+  /**
    * The DOMDocument we are encapsulating.
    *
    * @var \DOMDocument
