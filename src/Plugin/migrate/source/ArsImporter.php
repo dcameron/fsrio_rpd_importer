@@ -84,7 +84,6 @@ class ArsImporter extends ImporterBase {
     /** @var \DOMNode $div */
     foreach ($this->document->getElementsByTagName('div') as $div) {
       $class = $div->attributes->getNamedItem('class')->nodeValue;
-      $value = trim($div->nodeValue);
       if ($class == 'usa-width-three-fourths usa-layout-docs-main_content') {
         $project += $this->parseMainContent($div);
       }
@@ -95,7 +94,7 @@ class ArsImporter extends ImporterBase {
     foreach ($this->document->getElementsByTagName('a') as $anchor) {
       $href = $anchor->attributes->getNamedItem('href')->nodeValue;
       if ($href !== NULL && substr($href, 0, strlen(self::PERSON_PATH)) == self::PERSON_PATH) {
-        $project['investigators'][] = trim($anchor->nodeValue);
+        $project['investigators'][] = $this->parseInvestigatorValue($anchor->nodeValue);
       }
     }
 
@@ -147,6 +146,22 @@ class ArsImporter extends ImporterBase {
     $data['objective'] = $this->parseChildNodes($div, [8, 6]);
 
     return $data;
+  }
+
+  /**
+   * Parses the value from an anchor tag that contained an investigator name.
+   *
+   * @param string $value
+   *   The nodeValue of the investigator anchor tag.
+   *
+   * @return string
+   *   The trimmed investigator name.
+   */
+  protected function parseInvestigatorValue($value) {
+    $value = trim($value);
+    // Values may include nicknames that need to be trimmed off.
+    $value = explode(' - ', $value)[0];
+    return $value;
   }
 
 }
