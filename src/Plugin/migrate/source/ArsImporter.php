@@ -39,13 +39,6 @@ class ArsImporter extends ImporterBase {
   const PERSON_PATH = '/people-locations/person/?person-id=';
 
   /**
-   * Override the projectUrls during testing for faster file access.
-   *
-   * @var string[]
-   */
-  protected $projectUrls = ['test.html'];
-
-  /**
    * {@inheritdoc}
    */
   protected function getSourceUrl() {
@@ -98,7 +91,6 @@ class ArsImporter extends ImporterBase {
       }
     }
 
-    var_dump($project);
     return $project;
   }
 
