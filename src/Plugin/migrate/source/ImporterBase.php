@@ -137,6 +137,7 @@ abstract class ImporterBase extends SourcePluginBase implements ContainerFactory
     return [
       'accession_number' => $this->t('Accession Number (not valid for all sources)'),
       'end_year' => $this->t('End Year'),
+      'funding_source' => $this->t('Funding Source'),
       'institutions' => $this->t('Institutions'),
       'investigators' => $this->t('Investigators'),
       'objective' => $this->t('Objective'),
