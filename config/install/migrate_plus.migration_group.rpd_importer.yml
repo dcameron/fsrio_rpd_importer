@@ -1,0 +1,9 @@
+id: rpd_importer
+label: RPD Project Importers
+description: Plugins that parse research project content directly from their sources.
+source_type: Websites or public APIs
+shared_configuration: {  }
+dependencies:
+  enforced:
+    module:
+      - fsrio_rpd_importer
