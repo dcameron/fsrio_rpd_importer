@@ -137,11 +137,11 @@ class ArsImporter extends ImporterBase {
 
     $start_year = $this->parseChildNodes($div, [6, 1, 1, 0]);
     // Trim the year value from the end of the string.
-    $data['start_date'] = substr($start_year, -4);
+    $data['start_year'] = substr($start_year, -4);
 
     $end_year = $this->parseChildNodes($div, [6, 1, 1, 2]);
     // Trim the year value from the end of the string.
-    $data['end_date'] = substr($end_year, -4);
+    $data['end_year'] = substr($end_year, -4);
 
     $data['objective'] = $this->parseChildNodes($div, [8, 6]);
 
