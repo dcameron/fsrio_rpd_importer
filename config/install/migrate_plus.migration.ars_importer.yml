@@ -1,0 +1,42 @@
+# Migration configuration for importing ARS projects.
+id: ars_importer
+label: ARS Project Importer
+migration_group: rpd_importer
+source:
+  plugin: ars_project
+  constants:
+    funding_source: 'Agricultural Research Service'
+    institution: 'USDA - Agricultural Research Service'
+destination:
+  plugin: entity:node
+process:
+  type:
+    plugin: default_value
+    default_value: 'research_project'
+  field_accession_number: accession_number
+  field_end_date: end_year
+  field_funding_source:
+    plugin: entity_lookup
+    source: constants/funding_source
+  field_institution:
+    plugin: entity_lookup
+    source: constants/institution
+  field_investigator:
+    plugin: entity_generate
+    source: investigators
+  body/value: objective
+  body/format:
+    plugin: default_value
+    default_value: 'restricted_html'
+  field_project_number: project_number
+  field_source_url/uri: source_url
+  field_source_url/title:
+    plugin: default_value
+    default_value: 'View this project'
+  field_start_date: start_year
+  title: title
+migration_dependencies: {  }
+dependencies:
+  enforced:
+    module:
+      - fsrio_rpd_importer
