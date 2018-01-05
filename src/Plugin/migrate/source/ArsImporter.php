@@ -71,7 +71,7 @@ class ArsImporter extends ImporterBase {
 
     // The easiest way to get the accession_number is to get it from the query
     // parameter in the URL.
-    $project['accession_number'] = $this->getAccessionNumberFromUrl();
+    $project['accession_number'] = $this->getAccessionNumberFromUrl($this->currentUrl);
 
     // Most of the project content is contained in the main content div.
     /** @var \DOMNode $div */
@@ -95,13 +95,13 @@ class ArsImporter extends ImporterBase {
   }
 
   /**
-   * Parses the project's URL to get its accession number.
+   * Parses a project's URL to get its accession number.
    *
    * @return string
    *   The accession number.
    */
-  protected function getAccessionNumberFromUrl() {
-    $parts = parse_url($this->currentUrl);
+  protected function getAccessionNumberFromUrl($url) {
+    $parts = parse_url($url);
     if (!isset($parts['query'])) {
       return '';
     }
