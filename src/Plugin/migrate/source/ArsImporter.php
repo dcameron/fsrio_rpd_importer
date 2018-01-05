@@ -157,4 +157,13 @@ class ArsImporter extends ImporterBase {
     return $value;
   }
 
+  /**
+   * {@inheritdoc}
+   *
+   * Overridden because accession numbers are less likely to change than URLs.
+   */
+  public function getIds() {
+    return ['accession_number' => ['type' => 'int']];
+  }
+
 }
