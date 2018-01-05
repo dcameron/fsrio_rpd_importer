@@ -52,9 +52,10 @@ class ArsImporter extends ImporterBase {
     $urls = [];
 
     /** @var \DOMNode $anchor */
+    $length = strlen(self::PROJECT_PATH);
     foreach ($this->document->getElementsByTagName('a') as $anchor) {
       $href = $anchor->attributes->getNamedItem('href')->nodeValue;
-      if ($href !== NULL && substr($href, 0, strlen(self::PROJECT_PATH)) == self::PROJECT_PATH) {
+      if ($href !== NULL && substr($href, 0, $length) == self::PROJECT_PATH) {
         $urls[] = self::BASE_URL . $href;
       }
     }
