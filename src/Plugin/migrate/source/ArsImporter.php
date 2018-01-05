@@ -66,6 +66,24 @@ class ArsImporter extends ImporterBase {
 
   /**
    * {@inheritdoc}
+   *
+   * Overridden because accession numbers are a more accurate way of
+   * de-duplicating ARS projects.
+   */
+  protected function filterUrls() {
+    foreach ($this->projectUrls as $index => $url) {
+      $accession_number = $this->getAccessionNumberFromUrl($url);
+      $query = clone $this->entityQuery;
+      $query->condition('type', 'research_project')
+        ->condition('field_accession_number', $accession_number);
+      if (!empty($query->execute())) {
+        unset($this->projectUrls[$index]);
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
    */
   protected function parseProjectPage() {
     $project = [];
