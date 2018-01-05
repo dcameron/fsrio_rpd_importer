@@ -2,6 +2,7 @@
 
 namespace Drupal\fsrio_rpd_importer\Plugin\migrate\source;
 
+use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
 use Drupal\migrate\Plugin\MigrationInterface;
@@ -25,6 +26,13 @@ abstract class ImporterBase extends SourcePluginBase implements ContainerFactory
   protected $document;
 
   /**
+   * A node entity query.
+   *
+   * @var \Drupal\Core\Entity\Query\QueryInterface
+   */
+  protected $entityQuery;
+
+  /**
    * The URLs of individual project info pages.
    *
    * @var array
@@ -41,10 +49,11 @@ abstract class ImporterBase extends SourcePluginBase implements ContainerFactory
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, QueryInterface $entity_query) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
 
     $this->document = new \DOMDocument();
+    $this->entityQuery = $entity_query;
 
     // Suppress errors during parsing, so we can pick them up after.
     libxml_use_internal_errors(TRUE);
@@ -58,7 +67,8 @@ abstract class ImporterBase extends SourcePluginBase implements ContainerFactory
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $migration
+      $migration,
+      $container->get('entity_type.manager')->getStorage('node')->getQuery()
     );
   }
 
@@ -67,6 +77,7 @@ abstract class ImporterBase extends SourcePluginBase implements ContainerFactory
    */
   public function initializeIterator() {
     $this->discoverProjectUrls();
+    $this->preDownload();
     return new \ArrayIterator($this->parseProjectPages());
   }
 
@@ -96,6 +107,31 @@ abstract class ImporterBase extends SourcePluginBase implements ContainerFactory
    *   An array of project page URLs.
    */
   abstract protected function parseProjectListPage();
+
+  /**
+   * Perform any tasks that need to be done before project pages are downloaded.
+   */
+  protected function preDownload() {
+    $this->filterUrls();
+  }
+
+  /**
+   * Filter out the URLs of projects that are already in the database.
+   *
+   * This base method will filter based on the source_url, but it should be
+   * overridden for sources that have more accurate ways of identifying projects
+   * such as a project number or ARS's accession number.
+   */
+  protected function filterUrls() {
+    foreach ($this->projectUrls as $index => $url) {
+      $query = clone $this->entityQuery;
+      $query->condition('type', 'research_project')
+        ->condition('field_source_url', $url);
+      if (!empty($query->execute())) {
+        unset($this->projectUrls[$index]);
+      }
+    }
+  }
 
   /**
    * Parses project pages and inserts their metadata into an iterable array.
