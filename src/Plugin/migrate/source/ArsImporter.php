@@ -51,8 +51,8 @@ class ArsImporter extends ImporterBase {
   protected function parseProjectListPage() {
     $urls = [];
 
-    /** @var \DOMNode $anchor */
     $length = strlen(self::PROJECT_PATH);
+    /** @var \DOMNode $anchor */
     foreach ($this->document->getElementsByTagName('a') as $anchor) {
       $href = $anchor->attributes->getNamedItem('href')->nodeValue;
       if ($href !== NULL && substr($href, 0, $length) == self::PROJECT_PATH) {
